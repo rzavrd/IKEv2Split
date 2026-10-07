@@ -1,17 +1,87 @@
-# MYLO VPN — Android (IKEv2)
+# MYLO VPN
 
-Android 11+ (API 30). applicationId `com.mylo.vpn`.
+**MYLO VPN** یک اپلیکیشن مدرن VPN برای Android است که با تمرکز بر اتصال سریع، مدیریت ساده پروفایل‌ها، نمایش وضعیت اتصال و تجربه کاربری حرفه‌ای طراحی شده است.
 
-## Build a release APK
-Android Studio: Build > Select Build Variant > `release`, then Build > Build APK(s).
-Output: `app/build/outputs/apk/release/app-release.apk`
-(Signing uses `keystore.properties` + `app/mylo-release.jks`. Keep both: every update must use the same key.)
+## ✨ قابلیت‌ها
 
-If Gradle says "SDK location not found":
-  echo "sdk.dir=$HOME/Library/Android/sdk" > local.properties      (run inside this folder)
+* 🔐 اتصال VPN و مدیریت وضعیت Tunnel
+* 🌍 انتخاب و مدیریت Location / Server
+* ⚡ نمایش وضعیت اتصال و اطلاعات شبکه
+* 📊 نمایش آمار و اطلاعات ترافیک
+* 📡 تست Ping و بررسی وضعیت سرور
+* 🎨 رابط کاربری مدرن و قابل شخصی‌سازی
+* 🌙 پشتیبانی از حالت‌های مختلف ظاهر
+* 🔄 بررسی خودکار نسخه‌های جدید
+* 📥 دانلود نسخه جدید از داخل برنامه
+* 🛠️ صفحه تنظیمات و مدیریت پروفایل
+* 📝 نمایش Log و اطلاعات اتصال
+* 🗺️ نمایش موقعیت‌ها و مناطق مختلف
 
-## Updates from your laptop
-1. python3 tools/release.py setup --github OWNER/REPO   (or --base-url https://YOUR-DOMAIN/mylo)  -- BEFORE the first release build.
-2. Send that first APK to people once. After that they update from inside the app.
-3. New version:  python3 tools/release.py bump  ->  build release APK  ->  python3 tools/release.py publish ...
-   (see the header of tools/release.py for --scp / --github / --base-url)
+## 🔄 سیستم آپدیت
+
+MYLO VPN دارای سیستم به‌روزرسانی داخلی است.
+
+برنامه به‌صورت دوره‌ای نسخه جدید را بررسی می‌کند و همچنین کاربر می‌تواند از داخل برنامه به صورت دستی آپدیت را بررسی کند.
+
+Update Feed:
+
+`https://github.com/rzavrd/IKEv2Split/releases/download/update/update.json`
+
+نسخه‌های منتشرشده در بخش Releases قرار می‌گیرند.
+
+## 📦 آخرین نسخه
+
+**MYLO VPN 1.4**
+
+آخرین نسخه را می‌توانید از بخش Releases دریافت کنید.
+
+## 🏗️ ساخت پروژه
+
+پروژه با Android Studio و Kotlin توسعه داده شده است.
+
+برای ساخت نسخه Release:
+
+1. پروژه را در Android Studio باز کنید.
+2. Build Variant را روی `release` قرار دهید.
+3. APK را Build کنید.
+
+فایل Release در مسیر مشابه زیر قرار می‌گیرد:
+
+```text
+app/build/outputs/apk/release/app-release.apk
+```
+
+## 🚀 انتشار نسخه جدید
+
+سیستم انتشار پروژه از طریق GitHub Release مدیریت می‌شود.
+
+پس از افزایش نسخه:
+
+```bash
+python3 tools/release.py bump
+```
+
+نسخه Release را در Android Studio بسازید، سپس APK را در مسیر مورد انتظار قرار دهید و اجرا کنید:
+
+```bash
+python3 tools/release.py publish --github rzavrd/IKEv2Split --notes "توضیحات تغییرات"
+```
+
+این اسکریپت Release مربوط به نسخه جدید و Update Feed را مدیریت می‌کند.
+
+## 📋 نسخه‌ها
+
+| Version | Status   |
+| ------- | -------- |
+| 1.4     | Current  |
+| 1.3     | Previous |
+
+## 🔒 وضعیت پروژه
+
+این پروژه در حال توسعه فعال است و برخی قابلیت‌ها ممکن است در نسخه‌های آینده تغییر یا بهبود پیدا کنند.
+
+---
+
+**MYLO VPN**
+Modern. Simple. Secure.
+
