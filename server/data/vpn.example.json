@@ -1,0 +1,7 @@
+{
+  "vpn": {"user": "YOUR-VPN-USERNAME", "pass": "YOUR-VPN-PASSWORD", "remoteId": "pointtoserver.com"},
+  "servers": [
+    {"cc": "DE", "address": "de2-auto-ikev.ptoserver.com"}
+  ],
+  "message": ""
+}

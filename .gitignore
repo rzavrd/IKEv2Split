@@ -1,0 +1,17 @@
+.gradle/
+**/build/
+local.properties
+.idea/
+*.iml
+.DS_Store
+.env
+*.jks
+*.keystore
+secrets.properties
+
+# Local Kotlin data and logs
+.kotlin/
+*.log
+
+# Private VPN server configuration
+server/data/vpn.json

@@ -1,0 +1,2 @@
+Put the PureVPN IKEv2 certificate here and name it exactly:  purevpn_ca.crt
+(.der or .pem content both work). It is loaded automatically at connect time.
