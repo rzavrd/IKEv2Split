@@ -11,11 +11,14 @@ import java.time.temporal.TemporalAdjusters
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 
+<<<<<<< HEAD
 data class OvpnProfile(val name: String, val cc: String, val config: String, val local: Boolean = false)
 
 /** A manually added VMess / VLESS link. [kind] is "vmess" or "vless". */
 data class V2Profile(val name: String, val kind: String, val host: String, val port: Int, val link: String, val extra: String = "")
 
+=======
+>>>>>>> origin/main
 data class Hist(
     val server: String, val cc: String, val start: Long, val end: Long,
     val rx: Long, val tx: Long, val status: String,
@@ -63,6 +66,7 @@ class Store(private val ctx: Context) {
     var theme by strPref("theme", "System")
     var iconStyle by strPref("icon", "Classic")
     var showIp by boolPref("showip", true)
+<<<<<<< HEAD
     /** "IKEv2" (runs inside this app), "OpenVPN" or "V2Ray" (VMess/VLESS): both are opened in a companion app. */
     var protocol by strPref("proto", if (android.os.Build.VERSION.SDK_INT >= 30) "IKEv2" else "OpenVPN")
     var ovpnCurrent by strPref("ovpncur")
@@ -85,6 +89,11 @@ class Store(private val ctx: Context) {
     fun variantFor(addr: String): Int = p.getInt("var_$addr", -1)
     fun setVariant(addr: String, v: Int) { p.edit().putInt("var_$addr", v).apply() }
     var configEtag by strPref("cfgetag")
+=======
+    var directPing by boolPref("directping", false)   // bypassable VPN: live ping while connected
+    var verify by boolPref("verify", true)            // check that traffic really passes after connecting
+    var updateUrl by strPref("upd", Defaults.UPDATE_URL)
+>>>>>>> origin/main
     fun lastUpdateCheck(): Long = p.getLong("updchk", 0)
     fun setLastUpdateCheck(v: Long) { p.edit().putLong("updchk", v).apply() }
 
@@ -108,7 +117,11 @@ class Store(private val ctx: Context) {
                 .map { it.copy(cc = it.cc.ifEmpty { guessCc(it.address) }) }
             saveServers(defaults + extra)
             user = Defaults.USER; pass = Defaults.PASS; remoteId = Defaults.RID
+<<<<<<< HEAD
             if (current.isEmpty() || (defaults + extra).none { it.address == current }) current = defaults.firstOrNull()?.address ?: ""
+=======
+            if (current.isEmpty() || (defaults + extra).none { it.address == current }) current = defaults.first().address
+>>>>>>> origin/main
         }
         // v3: back to the settings that are known to work
         autoSelect = false
@@ -116,6 +129,7 @@ class Store(private val ctx: Context) {
         p.edit().putInt("seed", 3).apply()
     }
 
+<<<<<<< HEAD
     // ---------- OpenVPN profiles (from the server, or imported by the user) ----------
     private val ovpnFile get() = File(ctx.filesDir, "ovpn.json")
     fun ovpn(): List<OvpnProfile> {
@@ -152,6 +166,8 @@ class Store(private val ctx: Context) {
         v2File.writeText(a.toString())
     }
 
+=======
+>>>>>>> origin/main
     // ---------- favorites ----------
     fun favorites(): Set<String> = p.getStringSet("favs", emptySet())?.toSet() ?: emptySet()
     fun toggleFavorite(addr: String): Set<String> {

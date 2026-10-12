@@ -76,6 +76,7 @@ fun HomeScreen(vm: VpnViewModel, onPower: () -> Unit, onChange: () -> Unit, onAs
     val auto by vm.auto.collectAsState()
     val showIp by vm.showIp.collectAsState()
     val live by vm.live.collectAsState()
+<<<<<<< HEAD
     val proto by vm.protocol.collectAsState()
     val ovpnList by vm.ovpn.collectAsState()
     val ovpnSel by vm.ovpnSel.collectAsState()
@@ -85,6 +86,8 @@ fun HomeScreen(vm: VpnViewModel, onPower: () -> Unit, onChange: () -> Unit, onAs
     val ovCur = ovpnList.firstOrNull { it.name == ovpnSel } ?: ovpnList.firstOrNull()
     val v2Cur = v2List.firstOrNull { it.link == v2Sel } ?: v2List.firstOrNull()
     if (showProto) ProtocolDialog(vm) { showProto = false }
+=======
+>>>>>>> origin/main
     var now by remember { mutableLongStateOf(System.currentTimeMillis()) }
     LaunchedEffect(Unit) { while (true) { delay(1000); now = System.currentTimeMillis() } }
     LaunchedEffect(Unit) { while (true) { vm.measureLiveOnce(); delay(2000) } }
@@ -145,6 +148,7 @@ fun HomeScreen(vm: VpnViewModel, onPower: () -> Unit, onChange: () -> Unit, onAs
         failed?.let {
             Text(it.message, Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 4.dp), color = Danger, fontSize = 12.sp, textAlign = TextAlign.Center)
         }
+<<<<<<< HEAD
         if (proto != "IKEv2" && !connecting) {
             Text(
                 if (proto == "OpenVPN") "The button opens OpenVPN for Android, which makes and shows the connection."
@@ -152,6 +156,8 @@ fun HomeScreen(vm: VpnViewModel, onPower: () -> Unit, onChange: () -> Unit, onAs
                 Modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 2.dp), color = Muted, fontSize = 12.sp, textAlign = TextAlign.Center,
             )
         }
+=======
+>>>>>>> origin/main
         Spacer(Modifier.height(14.dp))
 
         Column(Modifier.padding(horizontal = 20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -160,6 +166,7 @@ fun HomeScreen(vm: VpnViewModel, onPower: () -> Unit, onChange: () -> Unit, onAs
                 Modifier.fillMaxWidth().clip(CardShape).background(CardBg).clickable(onClick = onChange).padding(horizontal = 14.dp, vertical = 7.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
+<<<<<<< HEAD
                 Text(flagEmoji(when (proto) { "OpenVPN" -> ovCur?.cc.orEmpty(); "V2Ray" -> com.ikev2split.app.v2ray.V2Link.ccOf(v2Cur?.name.orEmpty()); else -> shown?.cc.orEmpty() }), fontSize = 22.sp)
                 Spacer(Modifier.width(10.dp))
                 Column(Modifier.weight(1f)) {
@@ -173,6 +180,13 @@ fun HomeScreen(vm: VpnViewModel, onPower: () -> Unit, onChange: () -> Unit, onAs
                             fontSize = 19.sp, fontWeight = FontWeight.SemiBold, maxLines = 1,
                         )
                     }
+=======
+                Text(flagEmoji(shown?.cc.orEmpty()), fontSize = 22.sp)
+                Spacer(Modifier.width(10.dp))
+                Column(Modifier.weight(1f)) {
+                    Text(if (auto) (best?.name ?: "Measuring...") else "Selected Location", color = Muted, fontSize = 12.sp, maxLines = 1)
+                    Text(if (auto) "Fastest Location" else (server?.name ?: "No server selected"), fontSize = 19.sp, fontWeight = FontWeight.SemiBold, maxLines = 1)
+>>>>>>> origin/main
                 }
                 Text("Change", fontSize = 15.sp)
                 Spacer(Modifier.width(6.dp))
@@ -208,14 +222,22 @@ fun HomeScreen(vm: VpnViewModel, onPower: () -> Unit, onChange: () -> Unit, onAs
                         }
                     }
                 }
+<<<<<<< HEAD
                 Column(Modifier.weight(1f).height(85.dp).clip(CardShape).background(CardBg).clickable { showProto = true }.padding(horizontal = 14.dp, vertical = 10.dp)) {
+=======
+                Column(Modifier.weight(1f).height(85.dp).clip(CardShape).background(CardBg).padding(horizontal = 14.dp, vertical = 10.dp)) {
+>>>>>>> origin/main
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Text("Protocol", Modifier.weight(1f), color = Muted, fontSize = 14.sp)
                         Icon(Icons.AutoMirrored.Filled.KeyboardArrowRight, null, Modifier.size(20.dp))
                     }
                     Spacer(Modifier.weight(1f))
                     Text("Selected:", fontSize = 12.sp)
+<<<<<<< HEAD
                     Text(protoLabel(proto), fontSize = 20.sp, fontWeight = FontWeight.Bold)
+=======
+                    Text("IKEv2", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+>>>>>>> origin/main
                 }
             }
 

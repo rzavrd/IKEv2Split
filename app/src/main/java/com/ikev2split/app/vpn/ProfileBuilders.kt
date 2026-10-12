@@ -96,13 +96,22 @@ object ModernProfile {
 object LegacyProfile {
     fun build(store: Store, s: Server, attempt: Int): Ikev2VpnProfile {
         val lid = if (attempt >= 2) store.user else store.localId()
+<<<<<<< HEAD
         val b = Ikev2VpnProfile.Builder(s.address, lid)
+=======
+        return Ikev2VpnProfile.Builder(s.address, lid)
+>>>>>>> origin/main
             .setAuthUsernamePassword(store.user, store.pass, serverCa(store))
             .setBypassable(store.directPing)
             .setMetered(false)
             .setMaxMtu(store.mtu.coerceIn(1280, 1500))
+<<<<<<< HEAD
         // This call does not exist on Android 11: using it there threw NoSuchMethodError and closed the app.
         if (android.os.Build.VERSION.SDK_INT >= 31) b.setRequiresInternetValidation(false)
         return b.build()
+=======
+            .setRequiresInternetValidation(false)
+            .build()
+>>>>>>> origin/main
     }
 }

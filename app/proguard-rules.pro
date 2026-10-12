@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Compose / coroutines work with the default rules.
 -dontwarn org.jetbrains.annotations.**
 
@@ -7,3 +8,7 @@
 -keep class com.ikev2split.app.vpn.ModernProfile { *; }
 -keep class com.ikev2split.app.vpn.LegacyProfile { *; }
 -dontwarn android.net.**
+=======
+# Compose / coroutines work with the default optimize rules. Nothing special to keep.
+-dontwarn org.jetbrains.annotations.**
+>>>>>>> origin/main

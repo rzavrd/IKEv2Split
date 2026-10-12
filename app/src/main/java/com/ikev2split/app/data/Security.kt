@@ -14,6 +14,7 @@ data class Check(
     val subTitle: String? = null, val subDesc: String? = null, val subOk: Boolean = true,
 )
 
+<<<<<<< HEAD
 /** Android 11+: BiometricManager.Authenticators exists. */
 private fun biometricOk(ctx: Context): Boolean = try {
     ctx.getSystemService(BiometricManager::class.java)
@@ -26,6 +27,8 @@ private fun legacyBiometricOk(ctx: Context): Boolean = try {
         ctx.packageManager.hasSystemFeature("android.hardware.biometrics.face")
 } catch (e: Throwable) { false }
 
+=======
+>>>>>>> origin/main
 /** Four device checks, shown in the "Secure Device Assistant". */
 fun deviceChecks(ctx: Context): List<Check> {
     val patch = Build.VERSION.SECURITY_PATCH
@@ -37,7 +40,14 @@ fun deviceChecks(ctx: Context): List<Check> {
         status == DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE_PER_USER ||
         status == DevicePolicyManager.ENCRYPTION_STATUS_ACTIVE_DEFAULT_KEY
 
+<<<<<<< HEAD
     val bio = if (Build.VERSION.SDK_INT >= 30) biometricOk(ctx) else legacyBiometricOk(ctx)
+=======
+    val bio = try {
+        ctx.getSystemService(BiometricManager::class.java)
+            ?.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK) == BiometricManager.BIOMETRIC_SUCCESS
+    } catch (e: Exception) { false }
+>>>>>>> origin/main
 
     val rooted = listOf(
         "/system/bin/su", "/system/xbin/su", "/sbin/su", "/su/bin/su", "/data/local/xbin/su",

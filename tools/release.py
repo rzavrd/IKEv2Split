@@ -4,9 +4,12 @@ MYLO VPN - publish an update from your laptop.
 
   0) once:  python3 tools/release.py setup --github OWNER/REPO        (or  --base-url https://YOUR-DOMAIN/mylo)
             writes the update address into the app. Do it BEFORE the first release build.
+<<<<<<< HEAD
   login: python3 tools/release.py auth-setup --url https://api.YOUR-DOMAIN   (see server/README.md)
   ovpn:  python3 tools/release.py ovpn-push DE-udp.ovpn US-tcp.ovpn --scp user@host:/opt/mylo/server/data/openvpn/
         checks the .ovpn files on your laptop and uploads them to the server (no app update needed)
+=======
+>>>>>>> origin/main
   1) python3 tools/release.py bump
         raises versionCode (+1) and versionName (last number +1) in app/build.gradle.kts
   2) Android Studio: Build > Select Build Variant > release, then Build > Build APK(s)
@@ -64,6 +67,7 @@ def setup(a):
     print("Now build the release APK, install it once on your phone (and send it once to others). After that updates come from the app.")
 
 
+<<<<<<< HEAD
 def auth_setup(a):
     """Turns the login on: exports the VPN account + server list to server/data/vpn.json and removes them from the app."""
     url = a.url.rstrip("/")
@@ -135,6 +139,8 @@ def ovpn_push(a):
         print(f"checked {len(ok)} profile(s), copied to {DIST}. Put them in server/data/openvpn/ on the server (or pass --scp user@host:/path/).")
 
 
+=======
+>>>>>>> origin/main
 def sha256(path):
     h = hashlib.sha256()
     with open(path, "rb") as f:
@@ -199,12 +205,15 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
     sub.add_parser("bump")
+<<<<<<< HEAD
     au = sub.add_parser("auth-setup")
     au.add_argument("--url", required=True, help="https://api.your-domain.com")
     au.add_argument("--force", action="store_true")
     ov = sub.add_parser("ovpn-push")
     ov.add_argument("files", nargs="+")
     ov.add_argument("--scp", help="user@host:/opt/mylo/server/data/openvpn/")
+=======
+>>>>>>> origin/main
     st = sub.add_parser("setup")
     st.add_argument("--github", help="OWNER/REPO")
     st.add_argument("--base-url", help="https://YOUR-DOMAIN/mylo")
@@ -216,7 +225,11 @@ def main():
     p.add_argument("--scp", help="user@host:/remote/dir/")
     p.add_argument("--github", help="OWNER/REPO (needs the gh CLI logged in)")
     a = ap.parse_args()
+<<<<<<< HEAD
     {"bump": lambda: bump(), "setup": lambda: setup(a), "auth-setup": lambda: auth_setup(a), "ovpn-push": lambda: ovpn_push(a), "publish": lambda: publish(a)}[a.cmd]()
+=======
+    {"bump": lambda: bump(), "setup": lambda: setup(a), "publish": lambda: publish(a)}[a.cmd]()
+>>>>>>> origin/main
 
 
 if __name__ == "__main__":

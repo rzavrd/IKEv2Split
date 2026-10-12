@@ -1,5 +1,6 @@
 package com.ikev2split.app.ui
 
+<<<<<<< HEAD
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
@@ -7,6 +8,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.ui.graphics.Color
+=======
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+>>>>>>> origin/main
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -55,13 +60,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
+<<<<<<< HEAD
 import androidx.compose.ui.platform.LocalContext
+=======
+>>>>>>> origin/main
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ikev2split.app.VpnViewModel
+<<<<<<< HEAD
 import com.ikev2split.app.data.OvpnProfile
 import com.ikev2split.app.data.Regions
 import com.ikev2split.app.openvpn.OpenVpnBridge
@@ -70,6 +79,9 @@ import com.ikev2split.app.v2ray.V2Bridge
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.ui.platform.LocalClipboardManager
+=======
+import com.ikev2split.app.data.Regions
+>>>>>>> origin/main
 import com.ikev2split.app.data.Server
 import com.ikev2split.app.data.countryName
 import com.ikev2split.app.data.flagEmoji
@@ -81,6 +93,7 @@ fun LocationsScreen(vm: VpnViewModel, onBack: () -> Unit) {
     val auto by vm.auto.collectAsState()
     val favs by vm.favs.collectAsState()
     val hist by vm.history.collectAsState()
+<<<<<<< HEAD
     val ovpn by vm.ovpn.collectAsState()
     val ctx = LocalContext.current
     var ovpnPick by remember { mutableStateOf<OvpnProfile?>(null) }
@@ -95,6 +108,10 @@ fun LocationsScreen(vm: VpnViewModel, onBack: () -> Unit) {
     var showV2Add by remember { mutableStateOf(false) }
     var q by remember { mutableStateOf("") }
     var tab by remember { mutableIntStateOf(when (vm.protocol.value) { "OpenVPN" -> 2; "V2Ray" -> 3; else -> 0 }) }
+=======
+    var q by remember { mutableStateOf("") }
+    var tab by remember { mutableIntStateOf(0) }
+>>>>>>> origin/main
     var region by remember { mutableStateOf("All Regions") }
     var sortBy by remember { mutableStateOf("Locations") }
     var expanded by remember { mutableStateOf(setOf<String>()) }
@@ -104,8 +121,12 @@ fun LocationsScreen(vm: VpnViewModel, onBack: () -> Unit) {
     var regionMenu by remember { mutableStateOf(false) }
     var sortMenu by remember { mutableStateOf(false) }
 
+<<<<<<< HEAD
     LaunchedEffect(Unit) { vm.refreshHistory(); vm.syncConfig() }
     LaunchedEffect(tab, v2.size) { if (tab == 3) vm.pingV2() }
+=======
+    LaunchedEffect(Unit) { vm.refreshHistory() }
+>>>>>>> origin/main
     LaunchedEffect(Unit) { vm.livePingLoop(4000) }   // live ping while this screen is open
 
     val query = q.trim().lowercase()
@@ -118,7 +139,11 @@ fun LocationsScreen(vm: VpnViewModel, onBack: () -> Unit) {
     val recents = hist.mapNotNull { h -> servers.firstOrNull { it.name == h.server } }.distinctBy { it.address }.take(3)
     val favServers = servers.filter { it.address in favs }
 
+<<<<<<< HEAD
     fun pick(s: Server) { vm.setProtocol("IKEv2"); vm.select(s.address); onBack() }
+=======
+    fun pick(s: Server) { vm.select(s.address); onBack() }
+>>>>>>> origin/main
 
     Column(Modifier.fillMaxSize()) {
         SubHeader("VPN Locations", onBack, trailing = {
@@ -144,7 +169,11 @@ fun LocationsScreen(vm: VpnViewModel, onBack: () -> Unit) {
             )
         }
         Spacer(Modifier.height(12.dp))
+<<<<<<< HEAD
         Segmented(listOf("Best", "All", "OpenVPN", "V2Ray"), tab) { tab = it }
+=======
+        Segmented(listOf("Recommended", "All Locations"), tab) { tab = it }
+>>>>>>> origin/main
         Spacer(Modifier.height(4.dp))
 
         if (tab == 1 && query.isEmpty()) {
@@ -199,6 +228,7 @@ fun LocationsScreen(vm: VpnViewModel, onBack: () -> Unit) {
                     )
                 }
                 countryGroups(this, servers, expanded, { expanded = it }, vm, sel, auto, favs, ::pick, false, null)
+<<<<<<< HEAD
             } else if (tab == 2) {
                 item { Header(Icons.Filled.Public, "OpenVPN", "${ovpn.size}", chevron = false) }
                 if (ovpn.isEmpty()) {
@@ -233,6 +263,8 @@ fun LocationsScreen(vm: VpnViewModel, onBack: () -> Unit) {
                         TextButton({ vm.pingV2() }) { Text("Test speed") }
                     }
                 }
+=======
+>>>>>>> origin/main
             } else {
                 val groups = servers.groupBy { it.cc.ifEmpty { "??" } }
                     .filterKeys { region == "All Regions" || Regions.of(it) == region }
@@ -247,6 +279,7 @@ fun LocationsScreen(vm: VpnViewModel, onBack: () -> Unit) {
         }
     }
 
+<<<<<<< HEAD
     ovpnPick?.let { o ->
         val has = OpenVpnBridge.installed(ctx)
         AlertDialog(
@@ -343,6 +376,8 @@ fun LocationsScreen(vm: VpnViewModel, onBack: () -> Unit) {
             dismissButton = { TextButton({ showV2Add = false }) { Text("Cancel") } },
         )
     }
+=======
+>>>>>>> origin/main
     if (showHelp) {
         AlertDialog(
             onDismissRequest = { showHelp = false },
@@ -505,6 +540,7 @@ private fun ServerRow(
         Divider()
     }
 }
+<<<<<<< HEAD
 
 @Composable
 private fun OvpnRow(p: OvpnProfile, selected: Boolean, onClick: () -> Unit, onDelete: (() -> Unit)?) {
@@ -554,3 +590,5 @@ private fun V2Row(p: V2Profile, selected: Boolean, ping: Int?, onClick: () -> Un
         Divider()
     }
 }
+=======
+>>>>>>> origin/main

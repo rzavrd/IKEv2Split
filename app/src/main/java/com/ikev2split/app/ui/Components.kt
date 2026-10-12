@@ -101,7 +101,11 @@ fun Segmented(options: List<String>, selected: Int, onSelect: (Int) -> Unit) {
                     .background(if (i == selected) Track.copy(alpha = if (Pal.cur.dark) 0.35f else 0.9f) else Color.Transparent)
                     .clickable { onSelect(i) }.padding(vertical = 10.dp),
                 contentAlignment = Alignment.Center,
+<<<<<<< HEAD
             ) { Text(o, color = if (i == selected) Teal else Ink, fontWeight = FontWeight.SemiBold, fontSize = 14.sp, maxLines = 1) }
+=======
+            ) { Text(o, color = if (i == selected) Teal else Ink, fontWeight = FontWeight.SemiBold) }
+>>>>>>> origin/main
         }
     }
 }

@@ -23,7 +23,10 @@ import android.net.ipsec.ike.TunnelModeChildSessionParams
 import android.os.Build
 import android.os.SystemClock
 import android.system.OsConstants
+<<<<<<< HEAD
 import com.ikev2split.app.auth.Auth
+=======
+>>>>>>> origin/main
 import com.ikev2split.app.data.Hist
 import com.ikev2split.app.data.Server
 import com.ikev2split.app.data.Store
@@ -72,20 +75,28 @@ object VpnController {
         data class Failed(val message: String) : State
     }
 
+<<<<<<< HEAD
     private const val ATTEMPT_TIMEOUT_MS = 15_000L
 
     /** The platform IKEv2 VPN API exists from Android 11 (API 30). Older phones use OpenVPN or V2Ray. */
     val ikeSupported: Boolean get() = Build.VERSION.SDK_INT >= 30
+=======
+    private const val ATTEMPT_TIMEOUT_MS = 20_000L
+>>>>>>> origin/main
 
     private lateinit var app: Context
     private lateinit var store: Store
     private lateinit var vm: VpnManager
+<<<<<<< HEAD
     /** Any unexpected error inside the VPN code is shown in the log / status instead of closing the app. */
     private val guard = kotlinx.coroutines.CoroutineExceptionHandler { _, e ->
         log("internal error: ${e.javaClass.simpleName}: ${e.message}")
         if (want) fail("${e.javaClass.simpleName}: ${e.message ?: "unexpected error"}")
     }
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate + guard)
+=======
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+>>>>>>> origin/main
 
     private val _state = MutableStateFlow<State>(State.Disconnected)
     val state: StateFlow<State> = _state.asStateFlow()
@@ -153,20 +164,31 @@ object VpnController {
         app = ctx.applicationContext
         store = Store(app)
         Pinger.init(app)
+<<<<<<< HEAD
         if (!ikeSupported) { log("IKEv2 needs Android 11 or newer (this phone: API ${Build.VERSION.SDK_INT}); use OpenVPN or V2Ray"); return }
+=======
+>>>>>>> origin/main
         vm = app.getSystemService(Context.VPN_MANAGEMENT_SERVICE) as VpnManager
         val cm = app.getSystemService(ConnectivityManager::class.java)
         val req = NetworkRequest.Builder()
             .addTransportType(NetworkCapabilities.TRANSPORT_VPN)
             .removeCapability(NetworkCapabilities.NET_CAPABILITY_NOT_VPN)
             .build()
+<<<<<<< HEAD
         runCatching { cm.registerNetworkCallback(req, object : ConnectivityManager.NetworkCallback() {
+=======
+        cm.registerNetworkCallback(req, object : ConnectivityManager.NetworkCallback() {
+>>>>>>> origin/main
             override fun onAvailable(network: Network) { up.value = true }
             override fun onLost(network: Network) { up.value = false }
             override fun onLinkPropertiesChanged(network: Network, lp: LinkProperties) {
                 vpnIp = lp.linkAddresses.map { it.address }.firstOrNull { it is Inet4Address }?.hostAddress
             }
+<<<<<<< HEAD
         }) }
+=======
+        })
+>>>>>>> origin/main
         if (Build.VERSION.SDK_INT >= 33) {
             val f = IntentFilter(VpnManager.ACTION_VPN_MANAGER_EVENT).apply {
                 addCategory(VpnManager.CATEGORY_EVENT_IKE_ERROR)
@@ -182,11 +204,17 @@ object VpnController {
     fun markBusy() { _detail.value = "Preparing..."; _state.value = State.Connecting("", 0, 0) }
 
     /** Returns a consent Intent if the user must approve this app as a VPN, else null. */
+<<<<<<< HEAD
     fun provision(s: Server): Intent? =
         if (!ikeSupported) throw IllegalStateException("IKEv2 needs Android 11 or newer") else vm.provisionVpnProfile(buildProfile(s, 0))
 
     fun connect(s: Server, fallbacks: List<Server> = emptyList()) {
         if (!ikeSupported) { fail("IKEv2 needs Android 11 or newer. Choose OpenVPN or V2Ray in Profile > VPN Protocol."); return }
+=======
+    fun provision(s: Server): Intent? = vm.provisionVpnProfile(buildProfile(s, 0))
+
+    fun connect(s: Server, fallbacks: List<Server> = emptyList()) {
+>>>>>>> origin/main
         job?.cancel()
         job = scope.launch { runChain(listOf(s) + fallbacks) }
     }
@@ -194,7 +222,11 @@ object VpnController {
     fun disconnect() {
         want = false
         job?.cancel(); job = null
+<<<<<<< HEAD
         if (ikeSupported && this::vm.isInitialized) runCatching { vm.stopProvisionedVpnProfile() }
+=======
+        runCatching { vm.stopProvisionedVpnProfile() }
+>>>>>>> origin/main
         endHistory("Disconnected")
         _state.value = State.Disconnected
         log("disconnected")
@@ -217,6 +249,7 @@ object VpnController {
     }
 
     private suspend fun stopAndWait() {
+<<<<<<< HEAD
         val wasUp = up.value
         runCatching { vm.stopProvisionedVpnProfile() }
         if (wasUp) {
@@ -225,6 +258,11 @@ object VpnController {
         } else {
             delay(80)   // nothing was running: no reason to wait seconds
         }
+=======
+        runCatching { vm.stopProvisionedVpnProfile() }
+        withTimeoutOrNull(3000) { up.first { !it } }
+        delay(300)
+>>>>>>> origin/main
     }
 
     private suspend fun awaitUp(): Boolean {
@@ -238,6 +276,7 @@ object VpnController {
         return false
     }
 
+<<<<<<< HEAD
     /** Variants 0..2. The one that worked last time for this server is tried first, so a known-good server connects at once. */
     private fun variantOrder(s: Server, attempts: Int): List<Int> {
         val pref = store.variantFor(s.address)
@@ -250,23 +289,36 @@ object VpnController {
         val order = variantOrder(s, attempts)
         for (n in order.indices) {
             val variant = order[n]
+=======
+    private suspend fun tryServer(s: Server, attempts: Int): Boolean {
+        for (n in 0 until attempts) {
+            val variant = if (attempts == 1) 1 else n
+>>>>>>> origin/main
             _state.value = State.Connecting(s.name, n + 1, attempts)
             _detail.value = "${s.name} - try ${n + 1}/$attempts" + (lastError?.let { "\n$it" } ?: "")
             log("connecting to ${s.address} (try ${n + 1}/$attempts: ${describe(variant)})")
             try {
                 if (vm.provisionVpnProfile(buildProfile(s, variant)) != null) { fail("VPN permission was revoked"); return false }
                 if (Build.VERSION.SDK_INT >= 33) vm.startProvisionedVpnProfileSession() else vm.startProvisionedVpnProfile()
+<<<<<<< HEAD
             } catch (e: kotlinx.coroutines.CancellationException) {
                 throw e
             } catch (e: Throwable) {   // includes NoSuchMethodError / NoClassDefFoundError on older Android versions
+=======
+            } catch (e: Exception) {
+>>>>>>> origin/main
                 fail("${e.javaClass.simpleName}: ${e.message}"); return false
             }
             vpnIp = null
             if (awaitUp()) {
                 log("tunnel up (virtual IP $vpnIp)")
                 _detail.value = "Checking connection..."
+<<<<<<< HEAD
                 if (!store.verify || probeTunnel(1200) || validateTunnel()) {
                     store.setVariant(s.address, variant)
+=======
+                if (!store.verify || validateTunnel()) {
+>>>>>>> origin/main
                     since = System.currentTimeMillis()
                     histServer = s; histStart = since
                     _state.value = State.Connected(s.name, since, vpnIp)
@@ -318,6 +370,7 @@ object VpnController {
 
     private val probeTargets = listOf("1.1.1.1" to 443, "8.8.8.8" to 443, "9.9.9.9" to 443, "www.cloudflare.com" to 443)
 
+<<<<<<< HEAD
     private val probeScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 
     /** True as soon as ANY of several well-known endpoints answers through the tunnel (all are tried at the same time). */
@@ -338,6 +391,22 @@ object VpnController {
         while (SystemClock.elapsedRealtime() < end) {
             if (probeTunnel(1500)) return true
             delay(300)
+=======
+    /** True if at least one of several well-known endpoints answers through the tunnel. */
+    private suspend fun probeTunnel(): Boolean = withContext(Dispatchers.IO) {
+        for ((h, port) in probeTargets) {
+            val ok = try { Socket().use { it.connect(InetSocketAddress(h, port), 2000) }; true } catch (e: Exception) { false }
+            if (ok) return@withContext true
+        }
+        false
+    }
+
+    private suspend fun validateTunnel(): Boolean {
+        val end = SystemClock.elapsedRealtime() + 9_000
+        while (SystemClock.elapsedRealtime() < end) {
+            if (probeTunnel()) return true
+            delay(600)
+>>>>>>> origin/main
         }
         return false
     }
@@ -372,7 +441,10 @@ object VpnController {
                 }
                 if (dr > 2000) { lastRxAt = SystemClock.elapsedRealtime(); fails = 0 }
                 tick++
+<<<<<<< HEAD
                 if (tick % 300 == 0 && Auth.enabled()) scope.launch { Auth.ping() }   // admin can switch an account off
+=======
+>>>>>>> origin/main
                 if (tick % 5 == 0 && SystemClock.elapsedRealtime() - lastRxAt > 10_000) {
                     if (probeTunnel()) { fails = 0; lastRxAt = SystemClock.elapsedRealtime() }
                     else { fails++; log("no traffic for 10 s and probe failed ($fails/3)") }

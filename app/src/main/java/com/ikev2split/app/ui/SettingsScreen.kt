@@ -31,7 +31,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ikev2split.app.VpnViewModel
+<<<<<<< HEAD
 import com.ikev2split.app.auth.Auth
+=======
+>>>>>>> origin/main
 
 @Composable
 fun SettingsScreen(vm: VpnViewModel) {
@@ -50,17 +53,26 @@ fun SettingsScreen(vm: VpnViewModel) {
 
     Column(Modifier.fillMaxWidth().verticalScroll(rememberScrollState()).padding(20.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
 
+<<<<<<< HEAD
         if (!Auth.enabled()) {
+=======
+>>>>>>> origin/main
         Text("Account", color = Muted)
         OutlinedTextField(user, { user = it; st.user = it.trim() }, Modifier.fillMaxWidth(), label = { Text("VPN username") }, singleLine = true)
         OutlinedTextField(pass, { pass = it; st.pass = it }, Modifier.fillMaxWidth(), label = { Text("VPN password") }, singleLine = true,
             visualTransformation = PasswordVisualTransformation())
+<<<<<<< HEAD
         }
 
         Text("IKEv2", color = Muted, modifier = Modifier.padding(top = 8.dp))
         if (!Auth.enabled()) {
             OutlinedTextField(rid, { rid = it; st.remoteId = it.trim() }, Modifier.fillMaxWidth(), label = { Text("Remote ID (server identity)") }, singleLine = true)
         }
+=======
+
+        Text("IKEv2", color = Muted, modifier = Modifier.padding(top = 8.dp))
+        OutlinedTextField(rid, { rid = it; st.remoteId = it.trim() }, Modifier.fillMaxWidth(), label = { Text("Remote ID (server identity)") }, singleLine = true)
+>>>>>>> origin/main
         OutlinedTextField(mtu, { val d = it.filter(Char::isDigit).take(4); mtu = d; d.toIntOrNull()?.let { v -> st.mtu = v } }, Modifier.fillMaxWidth(),
             label = { Text("MTU (1280-1500)") }, singleLine = true, keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number))
 

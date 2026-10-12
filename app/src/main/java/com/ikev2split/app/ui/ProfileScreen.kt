@@ -24,7 +24,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.CallSplit
 import androidx.compose.material.icons.filled.Info
+<<<<<<< HEAD
 import androidx.compose.material.icons.filled.Lock
+=======
+>>>>>>> origin/main
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Person
@@ -60,7 +63,10 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ikev2split.app.VpnViewModel
+<<<<<<< HEAD
 import com.ikev2split.app.auth.AuthState
+=======
+>>>>>>> origin/main
 import com.ikev2split.app.update.Updater
 
 @Composable
@@ -72,10 +78,14 @@ fun ProfileScreen(vm: VpnViewModel, go: (String) -> Unit) {
     val showIp by vm.showIp.collectAsState()
     val failover by vm.failover.collectAsState()
     val directPing by vm.directPing.collectAsState()
+<<<<<<< HEAD
     val auth by vm.auth.collectAsState()
     val verify by vm.verify.collectAsState()
     val proto by vm.protocol.collectAsState()
     var showProto by remember { mutableStateOf(false) }
+=======
+    val verify by vm.verify.collectAsState()
+>>>>>>> origin/main
     var reveal by remember { mutableStateOf(false) }
     var dialog by remember { mutableStateOf<String?>(null) }
     var mtuDialog by remember { mutableStateOf(false) }
@@ -85,6 +95,7 @@ fun ProfileScreen(vm: VpnViewModel, go: (String) -> Unit) {
         Text("Profile", Modifier.fillMaxWidth().padding(top = 20.dp), textAlign = TextAlign.Center, fontSize = 22.sp, fontWeight = FontWeight.Bold)
 
         SectionTitle("Account Details")
+<<<<<<< HEAD
         val acct = auth as? AuthState.LoggedIn
         if (acct != null) {
             SettingRow(Icons.Filled.Person, "Signed in as", value = acct.username)
@@ -101,6 +112,14 @@ fun ProfileScreen(vm: VpnViewModel, go: (String) -> Unit) {
             )
             SettingRow(Icons.Filled.Shield, "Remote ID", value = st.remoteId)
         }
+=======
+        SettingRow(Icons.Filled.Person, "Subscription Type", value = "PureVPN")
+        SettingRow(
+            Icons.Filled.Info, "Username", value = if (reveal) st.user else "**********",
+            trailing = { IconButton({ reveal = !reveal }) { Icon(if (reveal) Icons.Filled.VisibilityOff else Icons.Filled.Visibility, "show") } },
+        )
+        SettingRow(Icons.Filled.Shield, "Remote ID", value = st.remoteId)
+>>>>>>> origin/main
 
         SectionTitle("VPN Settings")
         SettingRow(Icons.Filled.Palette, "Appearance", "Customize your app's look and feel", theme, { go("appearance") })
@@ -110,7 +129,11 @@ fun ProfileScreen(vm: VpnViewModel, go: (String) -> Unit) {
             Icons.Filled.Shield, "Internet Kill Switch", "Opens Android's Always-on VPN settings (Block connections without VPN).", "System",
             { ctx.startActivity(Intent(android.provider.Settings.ACTION_VPN_SETTINGS)) },
         )
+<<<<<<< HEAD
         SettingRow(Icons.Filled.VpnKey, "VPN Protocol", "IKEv2, OpenVPN or your own VMess / VLESS links", protoLabel(proto), { showProto = true })
+=======
+        SettingRow(Icons.Filled.VpnKey, "VPN Protocol", "Choose the best protocol for your needs", "IKEv2", { dialog = "proto" })
+>>>>>>> origin/main
         ToggleRow(Icons.Filled.Bolt, "Fastest Location auto-pick", "Ping all locations and connect to the fastest. Disable to use the selected location.", auto) { vm.setAuto(it) }
         ToggleRow(Icons.Filled.Refresh, "Auto reconnect", "If the tunnel dies, switch to the fastest other location. Your normal internet is restored first.", failover) { vm.setFailover(it) }
         ToggleRow(Icons.Filled.Shield, "Verify connection", "After connecting, check that traffic really passes; if not, try the next option automatically.", verify) { vm.setVerify(it) }
@@ -125,7 +148,10 @@ fun ProfileScreen(vm: VpnViewModel, go: (String) -> Unit) {
             Updater.installedName(ctx), { vm.checkUpdate(true) },
         )
         SettingRow(Icons.Filled.Terminal, "Connection Log", "See exactly what happened during the last connection", null, { go("log") })
+<<<<<<< HEAD
         SettingRow(Icons.Filled.Info, "About & What's new", "Features, updates, GitHub", Updater.installedName(ctx), { go("about") })
+=======
+>>>>>>> origin/main
         Column(Modifier.fillMaxWidth().padding(24.dp), horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally) {
             Box(
                 Modifier.size(56.dp).clip(RoundedCornerShape(14.dp)).background(Color(0xFF08CAD7)),
@@ -135,8 +161,11 @@ fun ProfileScreen(vm: VpnViewModel, go: (String) -> Unit) {
         }
     }
 
+<<<<<<< HEAD
     if (showProto) ProtocolDialog(vm) { showProto = false }
 
+=======
+>>>>>>> origin/main
     if (mtuDialog) {
         var text by remember { mutableStateOf(st.mtu.toString()) }
         AlertDialog(
@@ -175,7 +204,11 @@ fun ProfileScreen(vm: VpnViewModel, go: (String) -> Unit) {
                     if (d == "split")
                         "Sending Iranian sites outside the VPN needs control over routes, which Android's built-in IKEv2 engine (used by MYLO VPN) doesn't give apps. For true Iran-direct routing use the strongSwan app with 'Excluded subnets' (see Help). MYLO VPN's Live ping shows your direct connection while the VPN is on."
                     else
+<<<<<<< HEAD
                         "IKEv2/IPsec with EAP-MSCHAPv2 runs inside MYLO VPN. OpenVPN profiles (Locations > OpenVPN) are opened in the free OpenVPN for Android app, which makes that connection.",
+=======
+                        "IKEv2/IPsec with EAP-MSCHAPv2. WireGuard and OpenVPN aren't included in this version.",
+>>>>>>> origin/main
                 )
             },
         )

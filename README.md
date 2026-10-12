@@ -5,7 +5,10 @@
 ## ✨ قابلیت‌ها
 
 * 🔐 اتصال VPN و مدیریت وضعیت Tunnel
+<<<<<<< HEAD
 * 🔑 پروتکل‌ها: **IKEv2**، **OpenVPN**، **VMess** و **VLESS** (انتخاب از صفحه اصلی و Profile)
+=======
+>>>>>>> origin/main
 * 🌍 انتخاب و مدیریت Location / Server
 * ⚡ نمایش وضعیت اتصال و اطلاعات شبکه
 * 📊 نمایش آمار و اطلاعات ترافیک
@@ -15,6 +18,7 @@
 * 🔄 بررسی خودکار نسخه‌های جدید
 * 📥 دانلود نسخه جدید از داخل برنامه
 * 🛠️ صفحه تنظیمات و مدیریت پروفایل
+<<<<<<< HEAD
 * 📝 نمایش Log و اطلاعات اتصال (و گزارش کرش)
 * 🗺️ نمایش موقعیت‌ها و مناطق مختلف
 * 👤 ورود با نام کاربری و رمز (اختیاری، با سرور حساب)
@@ -26,6 +30,10 @@
 | IKEv2 | داخل خود MYLO VPN اجرا می‌شود (Android 11+) |
 | OpenVPN | پروفایل‌ها از سرور یا فایل `.ovpn`؛ اتصال با برنامه رایگان OpenVPN for Android |
 | VMess / VLESS | لینک `vmess://` و `vless://` را دستی اضافه کنید؛ لینک کپی می‌شود و در v2rayNG / Hiddify / NekoBox باز می‌شود |
+=======
+* 📝 نمایش Log و اطلاعات اتصال
+* 🗺️ نمایش موقعیت‌ها و مناطق مختلف
+>>>>>>> origin/main
 
 ## 🔄 سیستم آپدیت
 
@@ -41,9 +49,15 @@ Update Feed:
 
 ## 📦 آخرین نسخه
 
+<<<<<<< HEAD
 **MYLO VPN 1.5**
 
 آخرین نسخه را می‌توانید از بخش Releases دریافت کنید. توضیح تغییرات هر نسخه داخل برنامه هم هست: Profile > About & What's new.
+=======
+**MYLO VPN 1.4**
+
+آخرین نسخه را می‌توانید از بخش Releases دریافت کنید.
+>>>>>>> origin/main
 
 ## 🏗️ ساخت پروژه
 
@@ -71,13 +85,18 @@ app/build/outputs/apk/release/app-release.apk
 python3 tools/release.py bump
 ```
 
+<<<<<<< HEAD
 نسخه Release را در Android Studio بسازید، سپس اجرا کنید:
+=======
+نسخه Release را در Android Studio بسازید، سپس APK را در مسیر مورد انتظار قرار دهید و اجرا کنید:
+>>>>>>> origin/main
 
 ```bash
 python3 tools/release.py publish --github rzavrd/IKEv2Split --notes "توضیحات تغییرات"
 ```
 
 این اسکریپت Release مربوط به نسخه جدید و Update Feed را مدیریت می‌کند.
+<<<<<<< HEAD
 برای هر نسخه، تغییرات را در `app/src/main/java/com/ikev2split/app/ui/AboutScreen.kt` (لیست `releases`) هم اضافه کنید تا داخل برنامه نمایش داده شود.
 
 ## 👤 حساب کاربری و فایل‌های OpenVPN
@@ -89,13 +108,20 @@ python3 tools/release.py publish --github rzavrd/IKEv2Split --notes "توضیح�
 
 * فایل‌های `keystore.properties`، `*.jks` و `server/data/` در `.gitignore` هستند. هرگز آن‌ها را در گیت‌هاب نگذارید.
 * اگر رمز VPN داخل `Defaults.kt` باشد، هر کسی APK یا مخزن عمومی را ببیند آن را می‌بیند. `auth-setup` آن را از برنامه برمی‌دارد.
+=======
+>>>>>>> origin/main
 
 ## 📋 نسخه‌ها
 
 | Version | Status   |
 | ------- | -------- |
+<<<<<<< HEAD
 | 1.5     | Current  |
 | 1.4     | Previous |
+=======
+| 1.4     | Current  |
+| 1.3     | Previous |
+>>>>>>> origin/main
 
 ## 🔒 وضعیت پروژه
 
@@ -105,3 +131,7 @@ python3 tools/release.py publish --github rzavrd/IKEv2Split --notes "توضیح�
 
 **MYLO VPN**
 Modern. Simple. Secure.
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/main

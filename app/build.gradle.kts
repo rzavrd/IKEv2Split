@@ -17,10 +17,17 @@ android {
 
     defaultConfig {
         applicationId = "com.mylo.vpn"
+<<<<<<< HEAD
         minSdk = 26          // Android 8+. IKEv2 itself needs Android 11+ (checked at run time); OpenVPN / V2Ray work on every version
         targetSdk = 34
         versionCode = 10600   // = major*10000 + minor*100 + patch of versionName, always bigger than older builds
         versionName = "1.6"
+=======
+        minSdk = 30          // Android 11: first version with the platform IKEv2 VPN API
+        targetSdk = 34
+        versionCode = 5
+        versionName = "1.4"
+>>>>>>> origin/main
     }
 
     signingConfigs {

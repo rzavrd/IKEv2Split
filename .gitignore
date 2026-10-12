@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .gradle/
 **/build/
 local.properties
@@ -15,3 +16,12 @@ secrets.properties
 
 # Private VPN server configuration
 server/data/vpn.json
+=======
+*.iml
+.gradle
+/local.properties
+/.idea
+build/
+keystore.properties
+*.jks
+>>>>>>> origin/main

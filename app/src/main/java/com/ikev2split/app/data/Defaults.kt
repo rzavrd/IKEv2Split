@@ -7,10 +7,15 @@ object Defaults {
     const val USER = "purevpn0s13929385"
     const val PASS = "R4\$TDw{IwUI0st"
     const val RID = "pointtoserver.com"
+<<<<<<< HEAD
     /** Empty = no login (open app). Set it with: python3 tools/release.py auth-setup --url https://api.your-domain.com */
     const val AUTH_URL = ""
     /** Where update.json lives (must be https). Replace YOUR-DOMAIN before the first release build. */
     const val UPDATE_URL = "https://github.com/rzavrd/IKEv2Split/releases/download/update/update.json"
+=======
+    /** Where update.json lives (must be https). Replace YOUR-DOMAIN before the first release build. */
+    const val UPDATE_URL = "https://github.com/mehdi/IKEv2Split/releases/download/update/update.json"
+>>>>>>> origin/main
 
     // cc|host-prefix   (full host = prefix + ".ptoserver.com"), ordered by latency from the router
     private const val LIST = """
@@ -140,6 +145,7 @@ NZ|sx340546-ikev
 MX|sx360633-ikev
 """
 
+<<<<<<< HEAD
     /** Built-in servers (empty when the app is set up for login: the server hands them out instead). */
     fun servers(): List<Server> {
         val pairs = (LIST + "\n" + LIST2).lineSequence().map { it.trim() }.filter { it.isNotEmpty() }.map { l ->
@@ -154,6 +160,18 @@ MX|sx360633-ikev
     fun named(pairs: List<Pair<String, String>>): List<Server> {
         val seen = LinkedHashMap<String, String>()   // address -> cc
         pairs.forEach { (cc, host) -> if (host !in seen) seen[host] = cc }
+=======
+    /** All servers, de-duplicated by address, named "Country" or "Country - n". */
+    fun servers(): List<Server> {
+        val seen = LinkedHashMap<String, String>()   // address -> cc
+        (LIST + "\n" + LIST2).lineSequence().map { it.trim() }.filter { it.isNotEmpty() }.forEach { l ->
+            val f = l.split("|")
+            val cc = f[0]
+            val h = f[1]
+            val host = if (h.contains('.')) h else "${h}.ptoserver.com"
+            if (host !in seen) seen[host] = cc
+        }
+>>>>>>> origin/main
         val total = seen.values.groupingBy { it }.eachCount()
         val idx = HashMap<String, Int>()
         return seen.map { (host, cc) ->

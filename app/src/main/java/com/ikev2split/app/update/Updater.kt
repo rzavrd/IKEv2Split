@@ -7,11 +7,15 @@ import android.content.pm.PackageInstaller
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
+<<<<<<< HEAD
 import com.ikev2split.app.data.Defaults
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
+=======
+import kotlinx.coroutines.Dispatchers
+>>>>>>> origin/main
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import org.json.JSONObject
@@ -23,8 +27,11 @@ import java.security.MessageDigest
 data class UpdateInfo(
     val versionCode: Int, val versionName: String, val apkUrl: String,
     val sha256: String, val notes: String, val mandatory: Boolean,
+<<<<<<< HEAD
     /** the same file offered by other sources (your own server, GitHub ...): tried one after the other when a download fails */
     val mirrors: List<String> = emptyList(),
+=======
+>>>>>>> origin/main
 )
 
 sealed interface UpdateState {
@@ -45,18 +52,24 @@ sealed interface UpdateState {
 object Updater {
     val state = MutableStateFlow<UpdateState>(UpdateState.Idle)
 
+<<<<<<< HEAD
     @Suppress("DEPRECATION")
     fun installedCode(ctx: Context): Int {
         val pi = ctx.packageManager.getPackageInfo(ctx.packageName, 0)
         // longVersionCode exists from Android 9 (API 28); Android 8 only has versionCode
         return if (Build.VERSION.SDK_INT >= 28) pi.longVersionCode.toInt() else pi.versionCode
     }
+=======
+    fun installedCode(ctx: Context): Int =
+        ctx.packageManager.getPackageInfo(ctx.packageName, 0).longVersionCode.toInt()
+>>>>>>> origin/main
 
     fun installedName(ctx: Context): String =
         ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName ?: "?"
 
     private fun configured(url: String) = url.isNotBlank() && !url.contains("YOUR-DOMAIN") && url.startsWith("https://")
 
+<<<<<<< HEAD
     private fun fetchFeed(u: String): UpdateInfo {
         val c = URL(u).openConnection() as HttpURLConnection
         c.connectTimeout = 8_000; c.readTimeout = 8_000
@@ -79,11 +92,16 @@ object Updater {
 
     suspend fun check(ctx: Context, url: String, manual: Boolean) = withContext(Dispatchers.IO) {
         val urls = feeds(url)
+=======
+    suspend fun check(ctx: Context, url: String, manual: Boolean) = withContext(Dispatchers.IO) {
+        val urls = url.split(',', ' ', '\n').map { it.trim() }.filter { configured(it) }
+>>>>>>> origin/main
         if (urls.isEmpty()) {
             if (manual) state.value = UpdateState.Error("Update server is not set (run tools/release.py setup, or Profile > Advanced > Update URL).")
             return@withContext
         }
         if (manual) state.value = UpdateState.Checking
+<<<<<<< HEAD
         val results = coroutineScope {
             urls.map { u -> async { try { Result.success(fetchFeed(u)) } catch (e: Exception) { Result.failure<UpdateInfo>(e) } } }.awaitAll()
         }
@@ -98,6 +116,26 @@ object Updater {
         val withMirrors = best.copy(mirrors = same.map { it.apkUrl }.filter { it != best.apkUrl }.distinct())
         state.value = if (best.versionCode > installedCode(ctx)) UpdateState.Available(withMirrors)
         else if (manual) UpdateState.UpToDate else UpdateState.Idle
+=======
+        var lastError: Exception? = null
+        for (u in urls) {
+            try {
+                val c = URL(u).openConnection() as HttpURLConnection
+                c.connectTimeout = 10_000; c.readTimeout = 10_000
+                val o = JSONObject(c.inputStream.bufferedReader().readText())
+                val info = UpdateInfo(
+                    o.getInt("versionCode"), o.optString("versionName"), o.getString("apkUrl"),
+                    o.getString("sha256"), o.optString("notes"), o.optBoolean("mandatory", false),
+                )
+                state.value = if (info.versionCode > installedCode(ctx)) UpdateState.Available(info)
+                else if (manual) UpdateState.UpToDate else UpdateState.Idle
+                return@withContext
+            } catch (e: Exception) {
+                lastError = e
+            }
+        }
+        state.value = if (manual) UpdateState.Error("Could not check for updates: ${lastError?.message ?: lastError?.javaClass?.simpleName}") else UpdateState.Idle
+>>>>>>> origin/main
     }
 
     fun dismiss() { state.value = UpdateState.Idle }
@@ -111,6 +149,7 @@ object Updater {
             state.value = UpdateState.Error("Allow 'Install unknown apps' for MYLO VPN, come back and tap Update again.")
             return@withContext
         }
+<<<<<<< HEAD
         val sources = (listOf(info.apkUrl) + info.mirrors).distinct()
         val f = File(ctx.cacheDir, "update.apk")
         var last = "no source"
@@ -156,6 +195,38 @@ object Updater {
         if (total > 0 && done != total) throw IllegalStateException("download was cut off ($done of $total bytes)")
         val got = md.digest().joinToString("") { "%02x".format(it) }
         if (info.sha256.isBlank() || !got.equals(info.sha256, ignoreCase = true)) throw IllegalStateException("checksum mismatch - file rejected")
+=======
+        try {
+            state.value = UpdateState.Downloading(info, 0)
+            val f = File(ctx.cacheDir, "update.apk")
+            val md = MessageDigest.getInstance("SHA-256")
+            val c = URL(info.apkUrl).openConnection() as HttpURLConnection
+            c.connectTimeout = 15_000; c.readTimeout = 20_000
+            if (c.responseCode != 200) throw IllegalStateException("server answered ${c.responseCode}")
+            val total = c.contentLengthLong
+            var done = 0L
+            c.inputStream.use { ins ->
+                f.outputStream().use { out ->
+                    val buf = ByteArray(64 * 1024)
+                    while (true) {
+                        val n = ins.read(buf)
+                        if (n < 0) break
+                        out.write(buf, 0, n); md.update(buf, 0, n); done += n
+                        if (total > 0) state.value = UpdateState.Downloading(info, (done * 100 / total).toInt())
+                    }
+                }
+            }
+            val got = md.digest().joinToString("") { "%02x".format(it) }
+            if (info.sha256.isBlank() || !got.equals(info.sha256, ignoreCase = true)) {
+                f.delete()
+                throw IllegalStateException("checksum mismatch - update rejected")
+            }
+            state.value = UpdateState.Installing(info)
+            install(ctx, f)
+        } catch (e: Exception) {
+            state.value = UpdateState.Error("Update failed: ${e.message ?: e.javaClass.simpleName}")
+        }
+>>>>>>> origin/main
     }
 
     private fun install(ctx: Context, f: File) {

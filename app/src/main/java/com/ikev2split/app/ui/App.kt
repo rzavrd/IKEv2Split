@@ -48,9 +48,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.ikev2split.app.VpnViewModel
+<<<<<<< HEAD
 import com.ikev2split.app.auth.AuthState
 import com.ikev2split.app.update.UpdateState
 import kotlinx.coroutines.delay
+=======
+import com.ikev2split.app.update.UpdateState
+>>>>>>> origin/main
 
 @Composable
 fun AppRoot(vm: VpnViewModel, onPower: () -> Unit) {
@@ -79,6 +83,7 @@ fun AppRoot(vm: VpnViewModel, onPower: () -> Unit) {
             else -> {}
         }
     }
+<<<<<<< HEAD
     val auth by vm.auth.collectAsState()
     LaunchedEffect(auth) {
         while (auth is AuthState.LoggedIn) { delay(5 * 60_000L); vm.heartbeat() }
@@ -89,6 +94,11 @@ fun AppRoot(vm: VpnViewModel, onPower: () -> Unit) {
         if (auth is AuthState.LoggedOut || auth is AuthState.Busy) {
             LoginScreen(vm)
         } else {
+=======
+    val homeFull = sub == null && tab == 0     // the hero extends behind the status bar
+
+    AppTheme {
+>>>>>>> origin/main
         UpdateDialogs(upd, { vm.applyUpdate() }, { vm.dismissUpdate() })
         Scaffold(
             containerColor = Bg,
@@ -106,7 +116,10 @@ fun AppRoot(vm: VpnViewModel, onPower: () -> Unit) {
                     "assistant" -> AssistantScreen { sub = null }
                     "advanced" -> SubPage("Advanced", { sub = null }) { SettingsScreen(vm) }
                     "log" -> SubPage("Connection Log", { sub = null }) { LogScreen(vm) }
+<<<<<<< HEAD
                     "about" -> SubPage("About MYLO VPN", { sub = null }) { AboutScreen() }
+=======
+>>>>>>> origin/main
                     else -> when (tab) {
                         0 -> HomeScreen(vm, onPower, { sub = "locations" }, { sub = "assistant" }, { sub = "appearance" })
                         1 -> StatsScreen(vm)
@@ -117,7 +130,10 @@ fun AppRoot(vm: VpnViewModel, onPower: () -> Unit) {
                 }
             }
         }
+<<<<<<< HEAD
         }
+=======
+>>>>>>> origin/main
     }
 }
 

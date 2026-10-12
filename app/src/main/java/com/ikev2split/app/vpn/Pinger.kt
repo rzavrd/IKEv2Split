@@ -51,7 +51,11 @@ object Pinger {
     }
 
     suspend fun pingAll(list: List<Server>, onResult: ((Server) -> Unit)? = null): List<Server> = coroutineScope {
+<<<<<<< HEAD
         val sem = Semaphore(16)
+=======
+        val sem = Semaphore(6)
+>>>>>>> origin/main
         list.map { s ->
             async {
                 sem.withPermit {

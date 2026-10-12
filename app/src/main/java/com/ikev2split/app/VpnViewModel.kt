@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
+<<<<<<< HEAD
 import com.ikev2split.app.auth.Auth
 import com.ikev2split.app.auth.AuthState
 import com.ikev2split.app.data.ListParser
@@ -14,6 +15,9 @@ import com.ikev2split.app.openvpn.OpenVpnBridge
 import com.ikev2split.app.openvpn.OvpnImport
 import com.ikev2split.app.v2ray.V2Bridge
 import com.ikev2split.app.v2ray.V2Link
+=======
+import com.ikev2split.app.data.ListParser
+>>>>>>> origin/main
 import com.ikev2split.app.data.Server
 import com.ikev2split.app.data.Store
 import com.ikev2split.app.data.IconStyles
@@ -23,6 +27,7 @@ import com.ikev2split.app.vpn.LivePing
 import com.ikev2split.app.vpn.Pinger
 import com.ikev2split.app.vpn.SpeedTest
 import com.ikev2split.app.vpn.VpnController
+<<<<<<< HEAD
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -31,6 +36,8 @@ import kotlinx.coroutines.sync.Semaphore
 import kotlinx.coroutines.sync.withPermit
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
+=======
+>>>>>>> origin/main
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.delay
@@ -59,6 +66,7 @@ class VpnViewModel(app: Application) : AndroidViewModel(app) {
     val speed = SpeedTest.state
     val live = MutableStateFlow(Live())
     val update = Updater.state
+<<<<<<< HEAD
     val auth = Auth.state
     val authError = Auth.error
     val ovpn = MutableStateFlow(store.ovpn())
@@ -70,6 +78,8 @@ class VpnViewModel(app: Application) : AndroidViewModel(app) {
     val v2Ping = MutableStateFlow<Map<String, Int>>(emptyMap())
     /** Reasons shown after importing .ovpn files (empty = nothing to show) */
     val ovpnReport = MutableStateFlow<List<String>>(emptyList())
+=======
+>>>>>>> origin/main
     val directPing = MutableStateFlow(store.directPing)
     val verify = MutableStateFlow(store.verify)
     val toast = MutableSharedFlow<String>(extraBufferCapacity = 4)
@@ -79,6 +89,7 @@ class VpnViewModel(app: Application) : AndroidViewModel(app) {
     private var fallbacks: List<Server> = emptyList()
     private var prep: Job? = null
 
+<<<<<<< HEAD
     /** An unexpected error while connecting is shown as a message instead of closing the app. */
     private val guard = CoroutineExceptionHandler { _, e -> VpnController.fail("${e.javaClass.simpleName}: ${e.message ?: "unexpected error"}") }
 
@@ -96,6 +107,10 @@ class VpnViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             if (Auth.enabled() && Auth.state.value is AuthState.LoggedIn && Auth.ping()) Auth.loadConfig()
         }
+=======
+    init {
+        VpnController.init(app)
+>>>>>>> origin/main
         // quiet update check at most every 6 hours
         viewModelScope.launch {
             delay(4000)
@@ -117,6 +132,7 @@ class VpnViewModel(app: Application) : AndroidViewModel(app) {
 
     fun dismissUpdate() = Updater.dismiss()
 
+<<<<<<< HEAD
     // ------------------------------------------------------------ account (login server)
     fun login(user: String, pass: String) { viewModelScope.launch { Auth.login(user, pass) } }
     fun logout() { viewModelScope.launch { Auth.logout() } }
@@ -258,6 +274,8 @@ class VpnViewModel(app: Application) : AndroidViewModel(app) {
         }
     }
 
+=======
+>>>>>>> origin/main
     // ------------------------------------------------------------ appearance / settings
     fun setTheme(n: String) { store.theme = n; theme.value = n }
     fun setShowIp(v: Boolean) { store.showIp = v; showIp.value = v }
@@ -346,14 +364,19 @@ class VpnViewModel(app: Application) : AndroidViewModel(app) {
 
     // ------------------------------------------------------------ connect
     fun toggle(launchConsent: (Intent) -> Unit) {
+<<<<<<< HEAD
         if (store.protocol != "IKEv2" && !isActive()) { toggleExternal(); return }
         if (isActive()) { prep?.cancel(); VpnController.disconnect(); return }
         if (!VpnController.ikeSupported) { VpnController.fail("IKEv2 needs Android 11 or newer. Choose OpenVPN or V2Ray in Profile > VPN Protocol."); return }
         if (Auth.enabled() && Auth.state.value !is AuthState.LoggedIn) { VpnController.fail("Sign in first"); return }
+=======
+        if (isActive()) { prep?.cancel(); VpnController.disconnect(); return }
+>>>>>>> origin/main
         if (store.user.isBlank() || store.pass.isBlank()) {
             VpnController.fail("Enter username & password in Settings"); return
         }
         VpnController.markBusy()
+<<<<<<< HEAD
         prep = viewModelScope.launch(guard) {
             // the account check runs next to the connection instead of before it; a removed account is signed out and disconnected
             if (Auth.enabled()) launch { Auth.ping() }
@@ -363,6 +386,14 @@ class VpnViewModel(app: Application) : AndroidViewModel(app) {
                 if (!fresh) {
                     VpnController.log("measuring servers...")
                     withTimeoutOrNull(3500) { pingInternal() }   // whatever answered in time is used
+=======
+        prep = viewModelScope.launch {
+            var s = servers.value.firstOrNull { it.address == selected.value }
+            if (auto.value || s == null) {
+                if (System.currentTimeMillis() - lastPing > 60_000) {
+                    VpnController.log("measuring servers...")
+                    pingInternal()
+>>>>>>> origin/main
                 }
                 s = servers.value.filter { it.pingMs != null }.minByOrNull { it.pingMs!! }
                     ?: s ?: servers.value.firstOrNull()
@@ -376,10 +407,15 @@ class VpnViewModel(app: Application) : AndroidViewModel(app) {
             try {
                 val i = VpnController.provision(s)
                 if (i != null) launchConsent(i) else VpnController.connect(s, fallbacks)
+<<<<<<< HEAD
             } catch (e: kotlinx.coroutines.CancellationException) {
                 throw e
             } catch (e: Throwable) {
                 VpnController.fail("${e.javaClass.simpleName}: ${e.message ?: ""}")
+=======
+            } catch (e: Exception) {
+                VpnController.fail(e.message ?: e.javaClass.simpleName)
+>>>>>>> origin/main
             }
         }
     }

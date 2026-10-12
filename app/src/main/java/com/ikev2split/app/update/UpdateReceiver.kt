@@ -19,6 +19,7 @@ class UpdateReceiver : BroadcastReceiver() {
                 confirm?.let { c.startActivity(it.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
             }
             PackageInstaller.STATUS_SUCCESS -> Updater.dismiss()
+<<<<<<< HEAD
             PackageInstaller.STATUS_FAILURE_ABORTED -> Updater.fail("Installation was cancelled. Tap Update again and confirm.")
             PackageInstaller.STATUS_FAILURE_BLOCKED -> Updater.fail("Android or Play Protect blocked the installation. In the Play Protect dialog choose 'Install anyway', or turn off scanning for this install.")
             PackageInstaller.STATUS_FAILURE_CONFLICT -> Updater.fail("The new version conflicts with the installed one. Uninstall MYLO VPN once and install the new APK.")
@@ -26,6 +27,9 @@ class UpdateReceiver : BroadcastReceiver() {
             PackageInstaller.STATUS_FAILURE_INVALID -> Updater.fail("The downloaded file is not a valid app. Try again later.")
             PackageInstaller.STATUS_FAILURE_STORAGE -> Updater.fail("Not enough free storage to install the update.")
             else -> Updater.fail("Install did not finish: " + (i.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE) ?: "unknown error"))
+=======
+            else -> Updater.fail("Install did not finish: " + (i.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE) ?: "cancelled"))
+>>>>>>> origin/main
         }
     }
 }
